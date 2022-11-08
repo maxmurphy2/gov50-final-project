@@ -38,8 +38,8 @@ ACLED <- ACLED |>
   mutate(n = sum(fatalities))
 
 # Change name from Category to year
-#avg_annual_temp <- avg_annual_temp |>
-#  rename("year" = "Category")
+avg_annual_temp <- avg_annual_temp |>
+  rename("year" = "Category")
 
 # Filter temp data past 1997
 avg_annual_temp <- avg_annual_temp |>
@@ -92,8 +92,8 @@ temp_fat_scatter
 # 2. Create a scatter graph that compares the average annual precip vs annual no. of fatalities 
 
 # Change name from Category to year
-#avg_annual_precip <- avg_annual_precip |>
-#  rename("year" = "Category")
+avg_annual_precip <- avg_annual_precip |>
+  rename("year" = "Category")
 
 # Merge the two datasets
 precip_fatalities <- unique(merge(ACLED[ , c("year", "n")], avg_annual_precip, by = "year", all.x=TRUE))
