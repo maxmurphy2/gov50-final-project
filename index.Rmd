@@ -13,7 +13,7 @@ output:
 
 Should we expect the effects of climate change to increase the frequency of violent conflicts? There is a growing concern that as weather patterns become more extreme and unpredictable, there will be a concomitant increase in violent conflict, namely civil war. However, what remains unclear is whether there have already been violent conflicts that have been fueled by climate change. As such, in this paper I will interrogate the relationship between changes in temperature and precipitation and violent conflict in Sudan between 1997 and 2021. The reason for the focus on temperature and precipitation change is because these are both likely to become more inconstant due to climate change, and the rationale behind analyzing these effects in Sudan is because the civil war in Sudan has been dubbed “the first climate change conflict” (World Food Program USA, 2017). My hypothesis is that an increase in temperature and a decrease in precipitation will be correlated with higher rates of violent conflict in Sudan. Given that much of Sudan’s population is dependent upon rain-fed farming, it follows that in drier and warmer periods might lead to economic stress - and economic welfare is one of the most strongly correlated factors with violent conflict. The two explanatory variables - which are observed annual mean temperature per year and observed annual precipitation per year, respectively - are both taken from the Climatic Research Unit (CRU) of University of East Anglia. Meanwhile, using data from ACLED, the outcome variable is the number of fatalities from battles, protests, riots, violence against civilians, and explosions/remove violence each year. If the number of fatalities is higher in the years that have higher average temperatures and lower average precipitation levels, this would lend support to my hypothesis. Conversely, if fatality levels are not correlated with a change in temperature or precipitation, then this would provide evidence against my hypothesis.
 
-```{r}
+```{r, echo=FALSE}
 # Load in the data and libraries
 library(tidyverse)
 ACLED <- read_csv("data/1997-10-01-2021-10-01-South_Sudan-Sudan.csv")
@@ -22,7 +22,7 @@ avg_annual_temp <- read_csv("data/observed-average-annual-mean-temperature-of-su
 avg_annual_precip <- read_csv("data/observed-annual-precipitation,-1901-2021_br__sudan.csv")
 ```
 
-```{r}
+```{r, echo=FALSE}
 # I'm going to compare the following things:
 # 1. The average annual temp vs annual no. of fatalities 
 # 2. The average annual precip vs annual no. of fatalities 
@@ -73,7 +73,7 @@ fatalities_bar
 temp_scatter
 ```
 
-```{r}
+```{r, echo=FALSE}
 # 1. Create a scatter graph that compares the average annual temp vs annual no. of fatalities 
 temp_fat_scatter <- ggplot(temp_fatalities,
                            aes(x = `Annual Mean`,
@@ -82,20 +82,20 @@ temp_fat_scatter <- ggplot(temp_fatalities,
   labs(
     x = "Average Annual Temperature (°C)",
     y = "Number of annual fatalities",
-    title = "Relationship between the average annual temperature and annual number of fatalities"
+    title = "Average Annual Temp & Annual Fatalities"
   )
 
 temp_fat_scatter
 ```
 
-```{r}
+```{r, echo=FALSE}
 # 2. Create a scatter graph that compares the average annual precip vs annual no. of fatalities 
 
 # Change name from Category to year
 avg_annual_precip <- avg_annual_precip |>
   rename("year" = "Category")
 
-# Merge the two datasets
+# Merge the datasets
 precip_fatalities <- unique(merge(ACLED[ , c("year", "n")], avg_annual_precip, by = "year", all.x=TRUE))
 
 # Scattergraph 
@@ -106,7 +106,7 @@ precip_fat_scatter <- ggplot(precip_fatalities,
   labs(
     x = "Average Precipitation (mm)",
     y = "Number of annual fatalities",
-    title = "Relationship between the average precipitation and annual number of fatalities"
+    title = "Average Annual Precip & Annual Fatalities"
   )
 
 precip_fat_scatter
