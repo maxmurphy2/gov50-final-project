@@ -22,7 +22,7 @@ avg_annual_temp <- read_csv("data/observed-average-annual-mean-temperature-of-su
 avg_annual_precip <- read_csv("data/observed-annual-precipitation,-1901-2021_br__sudan.csv")
 ```
 
-```{r, echo=FALSE}
+```{r}
 # I'm going to compare the following things:
 # 1. The average annual temp vs annual no. of fatalities 
 # 2. The average annual precip vs annual no. of fatalities 
