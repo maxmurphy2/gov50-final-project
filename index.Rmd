@@ -49,7 +49,7 @@ avg_annual_temp <- avg_annual_temp |>
 temp_fatalities <- unique(merge(ACLED[ , c("year", "n")], avg_annual_temp, by = "year", all.x=TRUE))
 
 # Bar chart of fatalities per year
-ACLED |>
+fatalities_bar <- ACLED |>
   ggplot(mapping = aes(x = year, y = fatalities)) +
          geom_bar(stat='identity', fill = "steelblue1") + 
   labs(
@@ -59,7 +59,7 @@ ACLED |>
   )
 
 # Scatter graph of temperature per year 
-avg_annual_temp |>
+temp_scatter <- avg_annual_temp |>
   ggplot(mapping = aes(x = year, y = `Annual Mean`)) +
          geom_point(color = "steelblue1") + 
   labs(
@@ -67,19 +67,25 @@ avg_annual_temp |>
     y = "Average Annual Temperature (°C)",
     title = "Average Temperature Over Time"
   )
+
+fatalities_bar
+
+temp_scatter
 ```
 
 ```{r}
 # 1. Create a scatter graph that compares the average annual temp vs annual no. of fatalities 
-ggplot(temp_fatalities,
-       aes(x = `Annual Mean`,
-           y = n)) +
+temp_fat_scatter <- ggplot(temp_fatalities,
+                           aes(x = `Annual Mean`,
+                               y = n)) +
   geom_point(color = "steelblue1") +
   labs(
     x = "Average Annual Temperature (°C)",
     y = "Number of annual fatalities",
     title = "Relationship between the average annual temperature and annual number of fatalities"
   )
+
+temp_fat_scatter
 ```
 
 ```{r}
@@ -93,7 +99,7 @@ ggplot(temp_fatalities,
 precip_fatalities <- unique(merge(ACLED[ , c("year", "n")], avg_annual_precip, by = "year", all.x=TRUE))
 
 # Scattergraph 
-ggplot(precip_fatalities,
+precip_fat_scatter <- ggplot(precip_fatalities,
        aes(x = Precipitation,
            y = n)) +
   geom_point(color = "steelblue1") +
@@ -102,5 +108,7 @@ ggplot(precip_fatalities,
     y = "Number of annual fatalities",
     title = "Relationship between the average precipitation and annual number of fatalities"
   )
+
+precip_fat_scatter
 ```
 
