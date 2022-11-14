@@ -24,13 +24,13 @@ avg_annual_precip <- read_csv("data/observed-annual-precipitation,-1901-2021_br_
 
 ```{r}
 # I'm going to compare the following things:
-# 1. The average annual temp vs annual no. of fatalities 
-# 2. The average annual precip vs annual no. of fatalities 
-
-# And then, if I have time...
+# 1a The average annual temp vs annual no. of fatalities (normal and lagged)
+# 2a The average annual precip vs annual no. of fatalities (normal and lagged)
 
 # 3. The average monthly temp vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in hotter months)
 # 4. The average monthly precip vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in drier months)
+
+# And then if I have more time, maybe see if any of this changes depending on the type of event (e.g. violence against civilians). This might be interesting to explore. 
 
 # Create new column with  the count of fatalities per year
 ACLED <- ACLED |>
@@ -74,7 +74,7 @@ temp_scatter
 ```
 
 ```{r, echo=FALSE}
-# 1. Create a scatter graph that compares the average annual temp vs annual no. of fatalities 
+# 1a Create a scatter graph that compares the average annual temp vs annual no. of fatalities 
 temp_fat_scatter <- ggplot(temp_fatalities,
                            aes(x = `Annual Mean`,
                                y = n)) +
@@ -82,18 +82,57 @@ temp_fat_scatter <- ggplot(temp_fatalities,
   labs(
     x = "Average Annual Temperature (°C)",
     y = "Number of annual fatalities",
-    title = "Average Annual Temp & Annual Fatalities"
-  )
+    title = "Average Annual Temp & Annual Fatalities") +
+  geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5)
 
 temp_fat_scatter
 ```
 
+```{r}
+# 1b Run a linear regression that compares the average annual temp vs annual no. of fatalities 
+library(broom)
+
+
+fit_1 <- lm(n ~ `Annual Mean`, data = temp_fatalities)
+
+fit_1 |>
+  broom::tidy() |>
+  select(term, estimate) |>
+  knitr::kable(digits = 2)
+```
+
+A 1-unit increase in X (1 degrees C) is associated with an increase in 676.9 annual fatalities.
+
+```{r}
+# 1c Compare the average annual temp vs annual no. of fatalities LAGGED 1yr version
+
+# Lag the data so date values move up one row
+shift <- function(x, n){
+  c(x[-(seq(n))], rep(NA, n))
+}
+
+temp_fatalities_lag <- temp_fatalities
+  
+temp_fatalities_lag$year <- shift(temp_fatalities_lag$year, 1)
+
+# Run a regression for the lagged version  
+
+fit_1.5 <- lm(n ~ `Annual Mean`, data = temp_fatalities)
+
+fit_1.5 |>
+  broom::tidy() |>
+  select(term, estimate) |>
+  knitr::kable(digits = 2)
+```
+The output of the regression does not seem to change significantly when looking at the relationship between annual fatalities one year after the average annual temperature. 
+
+
 ```{r, echo=FALSE}
-# 2. Create a scatter graph that compares the average annual precip vs annual no. of fatalities 
+# 2a Create a scatter graph that compares the average annual precip vs annual no. of fatalities 
 
 # Change name from Category to year
-avg_annual_precip <- avg_annual_precip |>
-  rename("year" = "Category")
+#avg_annual_precip <- avg_annual_precip |>
+  #rename("year" = "Category")
 
 # Merge the datasets
 precip_fatalities <- unique(merge(ACLED[ , c("year", "n")], avg_annual_precip, by = "year", all.x=TRUE))
@@ -106,9 +145,62 @@ precip_fat_scatter <- ggplot(precip_fatalities,
   labs(
     x = "Average Precipitation (mm)",
     y = "Number of annual fatalities",
-    title = "Average Annual Precip & Annual Fatalities"
-  )
+    title = "Average Annual Precip & Annual Fatalities") +
+  geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5)
 
 precip_fat_scatter
+```
+
+```{r}
+# 2b Run a linear regression that compares the average annual precip vs annual no. of fatalities 
+
+fit_2 <- lm(n ~ Precipitation, data = precip_fatalities)
+
+fit_2 |>
+  broom::tidy() |>
+  select(term, estimate) |>
+  knitr::kable(digits = 2)
+```
+
+A 1-unit increase in X (1mm of average annual precipitation) is associated with a decrease in 21.13 annual fatalities. 
+
+```{r}
+# 2c Compare the average annual precip vs annual no. of fatalities LAGGED 1yr version
+
+# Create lagged version of the dataset
+precip_fatalities_lag <- precip_fatalities
+precip_fatalities_lag$year <- shift(precip_fatalities_lag$year, 1)
+
+# Run a regression for the lagged version  
+
+fit_2.5 <- lm(n ~ Precipitation, data = precip_fatalities)
+
+fit_2.5 |>
+  broom::tidy() |>
+  select(term, estimate) |>
+  knitr::kable(digits = 2)
+```
+
+```{r}
+# 3a The average monthly temp vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in hotter months)
+
+# First, using ACLED, I need to find the average number of fatalities by month
+#name_to_date <- function(x) {
+ # lubridate::dmy(x)
+#}
+
+#dplyr::mutate_all(ACLED$year, name_to_date)
+# First filter by cells which have a fatality
+
+# This one works - but how to apply to whole thing? lubridate::dmy("30 September 2021")
+
+
+
+# Second, I need to find the average temperature per month
+
+
+# Then lastly I need to compare the two together
+
+
 ```
 
