@@ -131,8 +131,8 @@ The output of the regression does not seem to change significantly when looking 
 # 2a Create a scatter graph that compares the average annual precip vs annual no. of fatalities 
 
 # Change name from Category to year
-#avg_annual_precip <- avg_annual_precip |>
-  #rename("year" = "Category")
+avg_annual_precip <- avg_annual_precip |>
+  rename("year" = "Category")
 
 # Merge the datasets
 precip_fatalities <- unique(merge(ACLED[ , c("year", "n")], avg_annual_precip, by = "year", all.x=TRUE))
@@ -185,15 +185,16 @@ fit_2.5 |>
 # 3a The average monthly temp vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in hotter months)
 
 # First, using ACLED, I need to find the average number of fatalities by month
-#name_to_date <- function(x) {
- # lubridate::dmy(x)
-#}
-
-#dplyr::mutate_all(ACLED$year, name_to_date)
-# First filter by cells which have a fatality
 
 # This one works - but how to apply to whole thing? lubridate::dmy("30 September 2021")
 
+#name_to_date <- function (x) {
+ # lubridate::dmy(x)
+#}
+
+#ACLED |>
+ # filter(fatalities >= 1) |>
+#mutate(across(name_to_date(ACLED$year)))
 
 
 # Second, I need to find the average temperature per month
