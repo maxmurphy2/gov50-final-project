@@ -262,4 +262,4 @@ fit_4 |>
   select(term, estimate) |>
   knitr::kable(digits = 2)
 ```
-A 1-unit increase in X (1mm of average monthly precipitation) is associated with an average decrease in 0.43 monthly fatalities. 
+A 1-unit increase in X (1mm of average monthly precipitation) is associated with an average increase in 0.43 monthly fatalities. 
