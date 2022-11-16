@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["data/1997-10-01-2021-10-01-South_Sudan-Sudan.csv","data/conflict_data_ssd.csv","data/monthly-climatology-of-min-temperature,-mean-temperature,-max-temperature-&-precipitation-1991-2020_br__sudan.csv","data/observed-annual-precipitation,-1901-2021_br__sudan.csv","data/observed-average-annual-mean-temperature-of-sudan-for-1901-2021 (1).csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-1-1.png","index_files/figure-html5/unnamed-chunk-1-2.png","index_files/figure-html5/unnamed-chunk-2-1.png","index_files/figure-html5/unnamed-chunk-2-2.png","index_files/figure-html5/unnamed-chunk-3-1.png","index_files/figure-html5/unnamed-chunk-4-1.png","index_files/figure-html5/unnamed-chunk-6-1.png","index_files/header-attrs-2.16/header-attrs.js","index_files/header-attrs-2.17/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min 2.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["data/1997-10-01-2021-10-01-South_Sudan-Sudan.csv","data/conflict_data_ssd.csv","data/monthly-climatology-of-min-temperature,-mean-temperature,-max-temperature-&-precipitation-1991-2020_br__sudan.csv","data/observed-annual-precipitation,-1901-2021_br__sudan.csv","data/observed-average-annual-mean-temperature-of-sudan-for-1901-2021 (1).csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-1-1.png","index_files/figure-html5/unnamed-chunk-1-2.png","index_files/figure-html5/unnamed-chunk-11-1.png","index_files/figure-html5/unnamed-chunk-2-1.png","index_files/figure-html5/unnamed-chunk-2-2.png","index_files/figure-html5/unnamed-chunk-3-1.png","index_files/figure-html5/unnamed-chunk-4-1.png","index_files/figure-html5/unnamed-chunk-6-1.png","index_files/figure-html5/unnamed-chunk-9-1.png","index_files/header-attrs-2.16/header-attrs.js","index_files/header-attrs-2.17/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1612,7 +1612,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </tbody>
 </table>
 </div>
-<p>A 1-unit increase in X (1 degrees C) is associated with an increase in 676.9 annual fatalities.</p>
+<p>A 1-unit increase in X (1 degrees C) is associated with an average increase in 676.9 annual fatalities.</p>
+<p>(Note: intercept doesn’t really mean much as the avg temp is so high, never 0)</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># 1c Compare the average annual temp vs annual no. of fatalities LAGGED 1yr version</span></span>
@@ -1688,7 +1689,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </tbody>
 </table>
 </div>
-<p>A 1-unit increase in X (1mm of average annual precipitation) is associated with a decrease in 21.13 annual fatalities.</p>
+<p>A 1-unit increase in X (1mm of average annual precipitation) is associated with an average decrease in 21.13 annual fatalities.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># 2c Compare the average annual precip vs annual no. of fatalities LAGGED 1yr version</span></span>
@@ -1731,23 +1732,122 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span></span>
 <span><span class='co'># First, using ACLED, I need to find the average number of fatalities by month</span></span>
 <span></span>
-<span><span class='co'># This one works - but how to apply to whole thing? lubridate::dmy("30 September 2021")</span></span>
+<span><span class='co'># Create a new column called month</span></span>
+<span><span class='va'>ACLED</span> <span class='op'>&lt;-</span> <span class='va'>ACLED</span> <span class='op'>|&gt;</span> <span class='fu'>mutate</span><span class='op'>(</span>month <span class='op'>=</span> <span class='fu'>str_extract</span><span class='op'>(</span><span class='va'>event_date</span>, <span class='st'>"(?&lt;=\\d )[a-zA-Z]+(?= \\d)"</span><span class='op'>)</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='co'>#name_to_date &lt;- function (x) {</span></span>
-<span> <span class='co'># lubridate::dmy(x)</span></span>
-<span><span class='co'>#}</span></span>
+<span><span class='co'># Group by month, and divide by number of years in dataset (24)</span></span>
+<span><span class='va'>avg_monthly_fatalities</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/aggregate.html'>aggregate</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>ACLED</span><span class='op'>$</span><span class='va'>fatalities</span> <span class='op'>/</span> <span class='fl'>24</span>,</span>
+<span>                                    by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>ACLED</span><span class='op'>$</span><span class='va'>month</span><span class='op'>)</span>, </span>
+<span>                                    FUN <span class='op'>=</span> <span class='va'>sum</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='co'>#ACLED |&gt;</span></span>
-<span> <span class='co'># filter(fatalities &gt;= 1) |&gt;</span></span>
-<span><span class='co'>#mutate(across(name_to_date(ACLED$year)))</span></span>
+<span><span class='co'># Rename variables in avg_monthly_temp_precip so that the are full month (not just 'Jan', 'Feb' etc.) to prepare for merge</span></span>
 <span></span>
+<span><span class='va'>avg_monthly_temp_precip</span> <span class='op'>&lt;-</span> <span class='va'>avg_monthly_temp_precip</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'>mutate</span><span class='op'>(</span>month <span class='op'>=</span> <span class='va'>month.name</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/match.html'>match</a></span><span class='op'>(</span><span class='va'>avg_monthly_temp_precip</span><span class='op'>$</span><span class='va'>Category</span>, <span class='va'>month.abb</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='co'># Second, I need to find the average temperature per month</span></span>
+<span><span class='co'># Rename column name in avg_monthly_fatalities to prepare for merge</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>avg_monthly_fatalities</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='st'>"month"</span> </span>
 <span></span>
+<span><span class='co'># Merge the datasets along the month columns</span></span>
+<span><span class='va'>avg_monthly_temp_precip_fatalities</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/merge.html'>merge</a></span><span class='op'>(</span><span class='va'>avg_monthly_temp_precip</span>, <span class='va'>avg_monthly_fatalities</span>, by <span class='op'>=</span> <span class='st'>"month"</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='co'># Then lastly I need to compare the two together</span></span></code></pre>
+<span><span class='co'># Create scattergraph </span></span>
+<span><span class='va'>avg_monthly_temp_fatalities_scatter</span> <span class='op'>&lt;-</span> <span class='fu'>ggplot</span><span class='op'>(</span><span class='va'>avg_monthly_temp_precip_fatalities</span>,</span>
+<span>       <span class='fu'>aes</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>`Mean-Temperature`</span>,</span>
+<span>           y <span class='op'>=</span> <span class='va'>`x`</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'>geom_point</span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"steelblue1"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'>labs</span><span class='op'>(</span></span>
+<span>    x <span class='op'>=</span> <span class='st'>"Average Monthly Temperature"</span>,</span>
+<span>    y <span class='op'>=</span> <span class='st'>"Average monthly fatalities"</span>,</span>
+<span>    title <span class='op'>=</span> <span class='st'>"Avg Monthly Temp &amp; Avg Monthly Fatalities"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'>geom_smooth</span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"lm"</span>, se <span class='op'>=</span> <span class='cn'>F</span>, color <span class='op'>=</span> <span class='st'>"indianred1"</span>, size <span class='op'>=</span> <span class='fl'>1.5</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>avg_monthly_temp_fatalities_scatter</span></span></code></pre>
 </div>
+<p><img src="index_files/figure-html5/unnamed-chunk-9-1.png" width="624" /></p>
 </div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># 3b Run a linear regression that compares the average monthly temp vs avg monthly no. of fatalities.</span></span>
+<span></span>
+<span><span class='va'>fit_3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>`Mean-Temperature`</span>, data <span class='op'>=</span> <span class='va'>avg_monthly_temp_precip_fatalities</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>fit_3</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'>broom</span><span class='fu'>::</span><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'>select</span><span class='op'>(</span><span class='va'>term</span>, <span class='va'>estimate</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span>digits <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">526.76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Mean-Temperature</code></td>
+<td style="text-align: right;">-3.71</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A 1-unit increase in X (1 degrees C in average monthly temperature) is associated with an average decrease in 3.71 average monthly fatalities.</p>
+<p>All of this makes me think that clearly it’s not down to seasonality - i.e. it’s due to ANNUAL increases in temperature, not changes within the year.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># 4a The average monthly precip vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in drier months)</span></span>
+<span></span>
+<span><span class='co'># Create scattergraph </span></span>
+<span><span class='va'>avg_monthly_precip_fatalities_scatter</span> <span class='op'>&lt;-</span> <span class='fu'>ggplot</span><span class='op'>(</span><span class='va'>avg_monthly_temp_precip_fatalities</span>,</span>
+<span>       <span class='fu'>aes</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>`Precipitation`</span>,</span>
+<span>           y <span class='op'>=</span> <span class='va'>`x`</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'>geom_point</span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"steelblue1"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'>labs</span><span class='op'>(</span></span>
+<span>    x <span class='op'>=</span> <span class='st'>"Average Monthly Precipitation"</span>,</span>
+<span>    y <span class='op'>=</span> <span class='st'>"Average monthly fatalities"</span>,</span>
+<span>    title <span class='op'>=</span> <span class='st'>"Avg Monthly Precip &amp; Avg Monthly Fatalities"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'>geom_smooth</span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"lm"</span>, se <span class='op'>=</span> <span class='cn'>F</span>, color <span class='op'>=</span> <span class='st'>"indianred1"</span>, size <span class='op'>=</span> <span class='fl'>1.5</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>avg_monthly_precip_fatalities_scatter</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-11-1.png" width="624" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># 4b Run a linear regression that compares the average monthly temp vs avg monthly no. of fatalities.</span></span>
+<span></span>
+<span><span class='va'>fit_4</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>`Precipitation`</span>, data <span class='op'>=</span> <span class='va'>avg_monthly_temp_precip_fatalities</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>fit_4</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'>broom</span><span class='fu'>::</span><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'>select</span><span class='op'>(</span><span class='va'>term</span>, <span class='va'>estimate</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span>digits <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">414.05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Precipitation</td>
+<td style="text-align: right;">0.43</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A 1-unit increase in X (1mm of average monthly precipitation) is associated with an average decrease in 0.43 monthly fatalities.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

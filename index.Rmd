@@ -17,7 +17,7 @@ Should we expect the effects of climate change to increase the frequency of viol
 # Load in the data and libraries
 library(tidyverse)
 ACLED <- read_csv("data/1997-10-01-2021-10-01-South_Sudan-Sudan.csv")
-avg_monthly <- read_csv("data/monthly-climatology-of-min-temperature,-mean-temperature,-max-temperature-&-precipitation-1991-2020_br__sudan.csv")
+avg_monthly_temp_precip <- read_csv("data/monthly-climatology-of-min-temperature,-mean-temperature,-max-temperature-&-precipitation-1991-2020_br__sudan.csv")
 avg_annual_temp <- read_csv("data/observed-average-annual-mean-temperature-of-sudan-for-1901-2021 (1).csv")
 avg_annual_precip <- read_csv("data/observed-annual-precipitation,-1901-2021_br__sudan.csv")
 ```
@@ -101,7 +101,9 @@ fit_1 |>
   knitr::kable(digits = 2)
 ```
 
-A 1-unit increase in X (1 degrees C) is associated with an increase in 676.9 annual fatalities.
+A 1-unit increase in X (1 degrees C) is associated with an average increase in 676.9 annual fatalities.
+
+(Note: intercept doesn't really mean much as the avg temp is so high, never 0)
 
 ```{r}
 # 1c Compare the average annual temp vs annual no. of fatalities LAGGED 1yr version
@@ -162,7 +164,7 @@ fit_2 |>
   knitr::kable(digits = 2)
 ```
 
-A 1-unit increase in X (1mm of average annual precipitation) is associated with a decrease in 21.13 annual fatalities. 
+A 1-unit increase in X (1mm of average annual precipitation) is associated with an average decrease in 21.13 annual fatalities. 
 
 ```{r}
 # 2c Compare the average annual precip vs annual no. of fatalities LAGGED 1yr version
@@ -186,22 +188,78 @@ fit_2.5 |>
 
 # First, using ACLED, I need to find the average number of fatalities by month
 
-# This one works - but how to apply to whole thing? lubridate::dmy("30 September 2021")
+# Create a new column called month
+ACLED <- ACLED |> mutate(month = str_extract(event_date, "(?<=\\d )[a-zA-Z]+(?= \\d)"))
 
-#name_to_date <- function (x) {
- # lubridate::dmy(x)
-#}
+# Group by month, and divide by number of years in dataset (24)
+avg_monthly_fatalities <- aggregate(x = ACLED$fatalities / 24,
+                                    by = list(ACLED$month), 
+                                    FUN = sum)
 
-#ACLED |>
- # filter(fatalities >= 1) |>
-#mutate(across(name_to_date(ACLED$year)))
+# Rename variables in avg_monthly_temp_precip so that the are full month (not just 'Jan', 'Feb' etc.) to prepare for merge
 
+avg_monthly_temp_precip <- avg_monthly_temp_precip |>
+  mutate(month = month.name[match(avg_monthly_temp_precip$Category, month.abb)])
 
-# Second, I need to find the average temperature per month
+# Rename column name in avg_monthly_fatalities to prepare for merge
+colnames(avg_monthly_fatalities)[1] <- "month" 
 
+# Merge the datasets along the month columns
+avg_monthly_temp_precip_fatalities <- merge(avg_monthly_temp_precip, avg_monthly_fatalities, by = "month")
 
-# Then lastly I need to compare the two together
+# Create scattergraph 
+avg_monthly_temp_fatalities_scatter <- ggplot(avg_monthly_temp_precip_fatalities,
+       aes(x = `Mean-Temperature`,
+           y = `x`)) +
+  geom_point(color = "steelblue1") +
+  labs(
+    x = "Average Monthly Temperature",
+    y = "Average monthly fatalities",
+    title = "Avg Monthly Temp & Avg Monthly Fatalities") +
+  geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5)
 
-
+avg_monthly_temp_fatalities_scatter
 ```
 
+```{r}
+# 3b Run a linear regression that compares the average monthly temp vs avg monthly no. of fatalities.
+
+fit_3 <- lm(x ~ `Mean-Temperature`, data = avg_monthly_temp_precip_fatalities)
+
+fit_3 |>
+  broom::tidy() |>
+  select(term, estimate) |>
+  knitr::kable(digits = 2)
+```
+A 1-unit increase in X (1 degrees C in average monthly temperature) is associated with an average decrease in 3.71 average monthly fatalities.
+
+All of this makes me think that clearly it's not down to seasonality - i.e. it's due to ANNUAL increases in temperature, not changes within the year. 
+
+```{r}
+# 4a The average monthly precip vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in drier months)
+
+# Create scattergraph 
+avg_monthly_precip_fatalities_scatter <- ggplot(avg_monthly_temp_precip_fatalities,
+       aes(x = `Precipitation`,
+           y = `x`)) +
+  geom_point(color = "steelblue1") +
+  labs(
+    x = "Average Monthly Precipitation",
+    y = "Average monthly fatalities",
+    title = "Avg Monthly Precip & Avg Monthly Fatalities") +
+  geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5)
+
+avg_monthly_precip_fatalities_scatter
+```
+
+```{r}
+# 4b Run a linear regression that compares the average monthly temp vs avg monthly no. of fatalities.
+
+fit_4 <- lm(x ~ `Precipitation`, data = avg_monthly_temp_precip_fatalities)
+
+fit_4 |>
+  broom::tidy() |>
+  select(term, estimate) |>
+  knitr::kable(digits = 2)
+```
+A 1-unit increase in X (1mm of average monthly precipitation) is associated with an average decrease in 0.43 monthly fatalities. 
