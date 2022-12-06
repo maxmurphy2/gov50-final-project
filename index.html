@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["data/1997-10-01-2021-10-01-South_Sudan-Sudan.csv","data/conflict_data_ssd.csv","data/monthly-climatology-of-min-temperature,-mean-temperature,-max-temperature-&-precipitation-1991-2020_br__sudan.csv","data/observed-annual-precipitation,-1901-2021_br__sudan.csv","data/observed-average-annual-mean-temperature-of-sudan-for-1901-2021 (1).csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-1-1.png","index_files/figure-html5/unnamed-chunk-1-2.png","index_files/figure-html5/unnamed-chunk-11-1.png","index_files/figure-html5/unnamed-chunk-2-1.png","index_files/figure-html5/unnamed-chunk-2-2.png","index_files/figure-html5/unnamed-chunk-3-1.png","index_files/figure-html5/unnamed-chunk-4-1.png","index_files/figure-html5/unnamed-chunk-6-1.png","index_files/figure-html5/unnamed-chunk-9-1.png","index_files/header-attrs-2.16/header-attrs.js","index_files/header-attrs-2.17/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["data/1997-10-01-2021-10-01-South_Sudan-Sudan.csv","data/conflict_data_ssd.csv","data/monthly-climatology-of-min-temperature,-mean-temperature,-max-temperature-&-precipitation-1991-2020_br__sudan.csv","data/observed-annual-precipitation,-1901-2021_br__sudan.csv","data/observed-average-annual-mean-temperature-of-sudan-for-1901-2021 (1).csv","index_files/anchor-4.2.2/anchor.min 2.js","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min 2.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2 2.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-1-1.png","index_files/figure-html5/unnamed-chunk-1-2.png","index_files/figure-html5/unnamed-chunk-10-1.png","index_files/figure-html5/unnamed-chunk-11-1.png","index_files/figure-html5/unnamed-chunk-12-1.png","index_files/figure-html5/unnamed-chunk-2-1.png","index_files/figure-html5/unnamed-chunk-2-2.png","index_files/figure-html5/unnamed-chunk-3-1.png","index_files/figure-html5/unnamed-chunk-4-1.png","index_files/figure-html5/unnamed-chunk-6-1.png","index_files/figure-html5/unnamed-chunk-9-1.png","index_files/header-attrs-2.16/header-attrs.js","index_files/header-attrs-2.17/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min 2.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents 2.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1524,16 +1524,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># I'm going to compare the following things:</span></span>
-<span><span class='co'># 1a The average annual temp vs annual no. of fatalities (normal and lagged)</span></span>
-<span><span class='co'># 2a The average annual precip vs annual no. of fatalities (normal and lagged)</span></span>
-<span></span>
-<span><span class='co'># 3. The average monthly temp vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in hotter months)</span></span>
-<span><span class='co'># 4. The average monthly precip vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in drier months)</span></span>
-<span></span>
-<span><span class='co'># And then if I have more time, maybe see if any of this changes depending on the type of event (e.g. violence against civilians). This might be interesting to explore. </span></span>
-<span></span>
-<span><span class='co'># Create new column with  the count of fatalities per year</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Create new column with  the count of fatalities per year</span></span>
 <span><span class='va'>ACLED</span> <span class='op'>&lt;-</span> <span class='va'>ACLED</span> <span class='op'>|&gt;</span></span>
 <span>  <span class='fu'>group_by</span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
 <span>  <span class='fu'>mutate</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>fatalities</span><span class='op'>)</span><span class='op'>)</span></span>
@@ -1584,33 +1575,32 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># 1b Run a linear regression that compares the average annual temp vs annual no. of fatalities </span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://broom.tidymodels.org/'>broom</a></span><span class='op'>)</span></span>
-<span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>stargazer</span><span class='op'>)</span></span>
 <span></span>
 <span><span class='va'>fit_1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>n</span> <span class='op'>~</span> <span class='va'>`Annual Mean`</span>, data <span class='op'>=</span> <span class='va'>temp_fatalities</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='va'>fit_1</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>broom</span><span class='fu'>::</span><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>select</span><span class='op'>(</span><span class='va'>term</span>, <span class='va'>estimate</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span>digits <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/stargazer/man/stargazer.html'>stargazer</a></span><span class='op'>(</span><span class='va'>fit_1</span>, type <span class='op'>=</span> <span class='st'>"text"</span><span class='op'>)</span></span></code></pre>
 </div>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;">term</th>
-<th style="text-align: right;">estimate</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">-14151.85</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>Annual Mean</code></td>
-<td style="text-align: right;">676.87</td>
-</tr>
-</tbody>
-</table>
+<pre><code>
+===============================================
+                        Dependent variable:    
+                    ---------------------------
+                                 n             
+-----------------------------------------------
+`Annual Mean`                 676.866          
+                            (1,977.857)        
+                                               
+Constant                    -14,151.850        
+                           (55,598.430)        
+                                               
+-----------------------------------------------
+Observations                    25             
+R2                             0.005           
+Adjusted R2                   -0.038           
+Residual Std. Error     3,344.121 (df = 23)    
+F Statistic             0.117 (df = 1; 23)     
+===============================================
+Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 </div>
 <p>A 1-unit increase in X (1 degrees C) is associated with an average increase in 676.9 annual fatalities.</p>
 <p>(Note: intercept doesn’t really mean much as the avg temp is so high, never 0)</p>
@@ -1631,29 +1621,28 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span></span>
 <span><span class='va'>fit_1.5</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>n</span> <span class='op'>~</span> <span class='va'>`Annual Mean`</span>, data <span class='op'>=</span> <span class='va'>temp_fatalities</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='va'>fit_1.5</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>broom</span><span class='fu'>::</span><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>select</span><span class='op'>(</span><span class='va'>term</span>, <span class='va'>estimate</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span>digits <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/stargazer/man/stargazer.html'>stargazer</a></span><span class='op'>(</span><span class='va'>fit_1.5</span>, type <span class='op'>=</span> <span class='st'>"text"</span><span class='op'>)</span></span></code></pre>
 </div>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;">term</th>
-<th style="text-align: right;">estimate</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">-14151.85</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>Annual Mean</code></td>
-<td style="text-align: right;">676.87</td>
-</tr>
-</tbody>
-</table>
+<pre><code>
+===============================================
+                        Dependent variable:    
+                    ---------------------------
+                                 n             
+-----------------------------------------------
+`Annual Mean`                 676.866          
+                            (1,977.857)        
+                                               
+Constant                    -14,151.850        
+                           (55,598.430)        
+                                               
+-----------------------------------------------
+Observations                    25             
+R2                             0.005           
+Adjusted R2                   -0.038           
+Residual Std. Error     3,344.121 (df = 23)    
+F Statistic             0.117 (df = 1; 23)     
+===============================================
+Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 </div>
 <p>The output of the regression does not seem to change significantly when looking at the relationship between annual fatalities one year after the average annual temperature.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -1665,29 +1654,28 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span></span>
 <span><span class='va'>fit_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>n</span> <span class='op'>~</span> <span class='va'>Precipitation</span>, data <span class='op'>=</span> <span class='va'>precip_fatalities</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='va'>fit_2</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>broom</span><span class='fu'>::</span><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>select</span><span class='op'>(</span><span class='va'>term</span>, <span class='va'>estimate</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span>digits <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/stargazer/man/stargazer.html'>stargazer</a></span><span class='op'>(</span><span class='va'>fit_2</span>, type <span class='op'>=</span> <span class='st'>"text"</span><span class='op'>)</span></span></code></pre>
 </div>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;">term</th>
-<th style="text-align: right;">estimate</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">10313.27</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Precipitation</td>
-<td style="text-align: right;">-21.13</td>
-</tr>
-</tbody>
-</table>
+<pre><code>
+===============================================
+                        Dependent variable:    
+                    ---------------------------
+                                 n             
+-----------------------------------------------
+Precipitation                 -21.131          
+                             (19.652)          
+                                               
+Constant                    10,313.270*        
+                            (5,100.847)        
+                                               
+-----------------------------------------------
+Observations                    25             
+R2                             0.048           
+Adjusted R2                    0.006           
+Residual Std. Error     3,271.405 (df = 23)    
+F Statistic             1.156 (df = 1; 23)     
+===============================================
+Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 </div>
 <p>A 1-unit increase in X (1mm of average annual precipitation) is associated with an average decrease in 21.13 annual fatalities.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -1702,29 +1690,64 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span></span>
 <span><span class='va'>fit_2.5</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>n</span> <span class='op'>~</span> <span class='va'>Precipitation</span>, data <span class='op'>=</span> <span class='va'>precip_fatalities</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='va'>fit_2.5</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>broom</span><span class='fu'>::</span><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>select</span><span class='op'>(</span><span class='va'>term</span>, <span class='va'>estimate</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span>digits <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/stargazer/man/stargazer.html'>stargazer</a></span><span class='op'>(</span><span class='va'>fit_2.5</span>, type <span class='op'>=</span> <span class='st'>"text"</span><span class='op'>)</span></span></code></pre>
 </div>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;">term</th>
-<th style="text-align: right;">estimate</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">10313.27</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Precipitation</td>
-<td style="text-align: right;">-21.13</td>
-</tr>
-</tbody>
-</table>
+<pre><code>
+===============================================
+                        Dependent variable:    
+                    ---------------------------
+                                 n             
+-----------------------------------------------
+Precipitation                 -21.131          
+                             (19.652)          
+                                               
+Constant                    10,313.270*        
+                            (5,100.847)        
+                                               
+-----------------------------------------------
+Observations                    25             
+R2                             0.048           
+Adjusted R2                    0.006           
+Residual Std. Error     3,271.405 (df = 23)    
+F Statistic             1.156 (df = 1; 23)     
+===============================================
+Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># MULTIPLE REGRESSION: annual temperature and precipitation vs fatatalities</span></span>
+<span></span>
+<span><span class='co'># First merge precip_fatalities and temp_fatalities to create new df</span></span>
+<span><span class='va'>precip_temp_fatalities</span> <span class='op'>&lt;-</span> <span class='fu'>inner_join</span><span class='op'>(</span><span class='va'>precip_fatalities</span>, <span class='va'>temp_fatalities</span>, by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"year"</span>, <span class='st'>"n"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Then do linear regression that considers both variables</span></span>
+<span><span class='va'>fit_precip_temp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>n</span> <span class='op'>~</span> <span class='va'>`Annual Mean`</span> <span class='op'>+</span> <span class='va'>Precipitation</span>, data <span class='op'>=</span> <span class='va'>precip_temp_fatalities</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://rdrr.io/pkg/stargazer/man/stargazer.html'>stargazer</a></span><span class='op'>(</span><span class='va'>fit_precip_temp</span>, type <span class='op'>=</span> <span class='st'>"text"</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>
+===============================================
+                        Dependent variable:    
+                    ---------------------------
+                                 n             
+-----------------------------------------------
+`Annual Mean`                 232.307          
+                            (2,026.966)        
+                                               
+Precipitation                 -20.615          
+                             (20.588)          
+                                               
+Constant                     3,650.445         
+                           (58,368.910)        
+                                               
+-----------------------------------------------
+Observations                    25             
+R2                             0.048           
+Adjusted R2                   -0.038           
+Residual Std. Error     3,343.931 (df = 22)    
+F Statistic             0.560 (df = 2; 22)     
+===============================================
+Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -1764,7 +1787,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span></span>
 <span><span class='va'>avg_monthly_temp_fatalities_scatter</span></span></code></pre>
 </div>
-<p><img src="index_files/figure-html5/unnamed-chunk-9-1.png" width="624" /></p>
+<p><img src="index_files/figure-html5/unnamed-chunk-10-1.png" width="624" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -1772,29 +1795,28 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span></span>
 <span><span class='va'>fit_3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>`Mean-Temperature`</span>, data <span class='op'>=</span> <span class='va'>avg_monthly_temp_precip_fatalities</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='va'>fit_3</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>broom</span><span class='fu'>::</span><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>select</span><span class='op'>(</span><span class='va'>term</span>, <span class='va'>estimate</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span>digits <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/stargazer/man/stargazer.html'>stargazer</a></span><span class='op'>(</span><span class='va'>fit_3</span>, type <span class='op'>=</span> <span class='st'>"text"</span><span class='op'>)</span></span></code></pre>
 </div>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;">term</th>
-<th style="text-align: right;">estimate</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">526.76</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>Mean-Temperature</code></td>
-<td style="text-align: right;">-3.71</td>
-</tr>
-</tbody>
-</table>
+<pre><code>
+===============================================
+                        Dependent variable:    
+                    ---------------------------
+                                 x             
+-----------------------------------------------
+`Mean-Temperature`            -3.711           
+                             (10.407)          
+                                               
+Constant                      526.759          
+                             (293.267)         
+                                               
+-----------------------------------------------
+Observations                    12             
+R2                             0.013           
+Adjusted R2                   -0.086           
+Residual Std. Error      133.243 (df = 10)     
+F Statistic             0.127 (df = 1; 10)     
+===============================================
+Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 </div>
 <p>A 1-unit increase in X (1 degrees C in average monthly temperature) is associated with an average decrease in 3.71 average monthly fatalities.</p>
 <p>All of this makes me think that clearly it’s not down to seasonality - i.e. it’s due to ANNUAL increases in temperature, not changes within the year.</p>
@@ -1815,7 +1837,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span></span>
 <span><span class='va'>avg_monthly_precip_fatalities_scatter</span></span></code></pre>
 </div>
-<p><img src="index_files/figure-html5/unnamed-chunk-11-1.png" width="624" /></p>
+<p><img src="index_files/figure-html5/unnamed-chunk-12-1.png" width="624" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -1823,32 +1845,31 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span></span>
 <span><span class='va'>fit_4</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>~</span> <span class='va'>`Precipitation`</span>, data <span class='op'>=</span> <span class='va'>avg_monthly_temp_precip_fatalities</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='va'>fit_4</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>broom</span><span class='fu'>::</span><span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>select</span><span class='op'>(</span><span class='va'>term</span>, <span class='va'>estimate</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span>digits <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/stargazer/man/stargazer.html'>stargazer</a></span><span class='op'>(</span><span class='va'>fit_4</span>, type <span class='op'>=</span> <span class='st'>"text"</span><span class='op'>)</span></span></code></pre>
 </div>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;">term</th>
-<th style="text-align: right;">estimate</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">414.05</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Precipitation</td>
-<td style="text-align: right;">0.43</td>
-</tr>
-</tbody>
-</table>
+<pre><code>
+===============================================
+                        Dependent variable:    
+                    ---------------------------
+                                 x             
+-----------------------------------------------
+Precipitation                  0.425           
+                              (1.363)          
+                                               
+Constant                    414.051***         
+                             (48.162)          
+                                               
+-----------------------------------------------
+Observations                    12             
+R2                             0.010           
+Adjusted R2                   -0.089           
+Residual Std. Error      133.440 (df = 10)     
+F Statistic             0.097 (df = 1; 10)     
+===============================================
+Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 </div>
-<p>A 1-unit increase in X (1mm of average monthly precipitation) is associated with an average decrease in 0.43 monthly fatalities.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<p>A 1-unit increase in X (1mm of average monthly precipitation) is associated with an average increase in 0.43 monthly fatalities.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
