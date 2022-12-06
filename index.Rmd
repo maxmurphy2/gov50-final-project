@@ -20,18 +20,18 @@ ACLED <- read_csv("data/1997-10-01-2021-10-01-South_Sudan-Sudan.csv")
 avg_monthly_temp_precip <- read_csv("data/monthly-climatology-of-min-temperature,-mean-temperature,-max-temperature-&-precipitation-1991-2020_br__sudan.csv")
 avg_annual_temp <- read_csv("data/observed-average-annual-mean-temperature-of-sudan-for-1901-2021 (1).csv")
 avg_annual_precip <- read_csv("data/observed-annual-precipitation,-1901-2021_br__sudan.csv")
+
+# Read ed thing
+# Must do multiple regression as well as single one
+# Keep both graphs still
+
+# For limitations, you could say I wish I had monthly precipitation.
+# Can I establish causalitY? if not, how could i through a different study?
+
+
 ```
 
 ```{r}
-# I'm going to compare the following things:
-# 1a The average annual temp vs annual no. of fatalities (normal and lagged)
-# 2a The average annual precip vs annual no. of fatalities (normal and lagged)
-
-# 3. The average monthly temp vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in hotter months)
-# 4. The average monthly precip vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in drier months)
-
-# And then if I have more time, maybe see if any of this changes depending on the type of event (e.g. violence against civilians). This might be interesting to explore. 
-
 # Create new column with  the count of fatalities per year
 ACLED <- ACLED |>
   group_by(year) |>
@@ -77,13 +77,15 @@ temp_scatter
 # 1a Create a scatter graph that compares the average annual temp vs annual no. of fatalities 
 temp_fat_scatter <- ggplot(temp_fatalities,
                            aes(x = `Annual Mean`,
-                               y = n)) +
+                               y = n, 
+                               label = year)) +
   geom_point(color = "steelblue1") +
   labs(
     x = "Average Annual Temperature (°C)",
     y = "Number of annual fatalities",
     title = "Average Annual Temp & Annual Fatalities") +
-  geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5)
+  geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5) + 
+  geom_text(size = 1.5, hjust = 0, nudge_x = 0.03)
 
 temp_fat_scatter
 ```
@@ -91,14 +93,11 @@ temp_fat_scatter
 ```{r}
 # 1b Run a linear regression that compares the average annual temp vs annual no. of fatalities 
 library(broom)
-
+library(stargazer)
 
 fit_1 <- lm(n ~ `Annual Mean`, data = temp_fatalities)
 
-fit_1 |>
-  broom::tidy() |>
-  select(term, estimate) |>
-  knitr::kable(digits = 2)
+stargazer(fit_1, type = "text")
 ```
 
 A 1-unit increase in X (1 degrees C) is associated with an average increase in 676.9 annual fatalities.
@@ -121,10 +120,7 @@ temp_fatalities_lag$year <- shift(temp_fatalities_lag$year, 1)
 
 fit_1.5 <- lm(n ~ `Annual Mean`, data = temp_fatalities)
 
-fit_1.5 |>
-  broom::tidy() |>
-  select(term, estimate) |>
-  knitr::kable(digits = 2)
+stargazer(fit_1.5, type = "text")
 ```
 The output of the regression does not seem to change significantly when looking at the relationship between annual fatalities one year after the average annual temperature. 
 
@@ -142,13 +138,15 @@ precip_fatalities <- unique(merge(ACLED[ , c("year", "n")], avg_annual_precip, b
 # Scattergraph 
 precip_fat_scatter <- ggplot(precip_fatalities,
        aes(x = Precipitation,
-           y = n)) +
+           y = n,
+           label = year)) +
   geom_point(color = "steelblue1") +
   labs(
     x = "Average Precipitation (mm)",
     y = "Number of annual fatalities",
     title = "Average Annual Precip & Annual Fatalities") +
-  geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5)
+  geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5) +
+  geom_text(size = 1.5, hjust = 0, nudge_x = 2)
 
 precip_fat_scatter
 ```
@@ -158,10 +156,7 @@ precip_fat_scatter
 
 fit_2 <- lm(n ~ Precipitation, data = precip_fatalities)
 
-fit_2 |>
-  broom::tidy() |>
-  select(term, estimate) |>
-  knitr::kable(digits = 2)
+stargazer(fit_2, type = "text")
 ```
 
 A 1-unit increase in X (1mm of average annual precipitation) is associated with an average decrease in 21.13 annual fatalities. 
@@ -177,11 +172,23 @@ precip_fatalities_lag$year <- shift(precip_fatalities_lag$year, 1)
 
 fit_2.5 <- lm(n ~ Precipitation, data = precip_fatalities)
 
-fit_2.5 |>
-  broom::tidy() |>
-  select(term, estimate) |>
-  knitr::kable(digits = 2)
+stargazer(fit_2.5, type = "text")
 ```
+
+```{r}
+
+# MULTIPLE REGRESSION: annual temperature and precipitation vs fatatalities
+
+# First merge precip_fatalities and temp_fatalities to create new df
+precip_temp_fatalities <- inner_join(precip_fatalities, temp_fatalities, by = c("year", "n"))
+
+# Then do linear regression that considers both variables
+fit_precip_temp <- lm(n ~ `Annual Mean` + Precipitation, data = precip_temp_fatalities)
+
+stargazer(fit_precip_temp, type = "text")
+```
+
+
 
 ```{r}
 # 3a The average monthly temp vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in hotter months)
@@ -226,10 +233,7 @@ avg_monthly_temp_fatalities_scatter
 
 fit_3 <- lm(x ~ `Mean-Temperature`, data = avg_monthly_temp_precip_fatalities)
 
-fit_3 |>
-  broom::tidy() |>
-  select(term, estimate) |>
-  knitr::kable(digits = 2)
+stargazer(fit_3, type = "text")
 ```
 A 1-unit increase in X (1 degrees C in average monthly temperature) is associated with an average decrease in 3.71 average monthly fatalities.
 
@@ -257,9 +261,6 @@ avg_monthly_precip_fatalities_scatter
 
 fit_4 <- lm(x ~ `Precipitation`, data = avg_monthly_temp_precip_fatalities)
 
-fit_4 |>
-  broom::tidy() |>
-  select(term, estimate) |>
-  knitr::kable(digits = 2)
+stargazer(fit_4, type = "text")
 ```
 A 1-unit increase in X (1mm of average monthly precipitation) is associated with an average increase in 0.43 monthly fatalities. 
