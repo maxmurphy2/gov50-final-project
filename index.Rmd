@@ -1,17 +1,21 @@
 ---
-title: "Gov 50 Final Project"
+title: "Sudan: The First Climate Change Conflict? An investigation into the relationship between temperature/precipitation change and violent conflict"
 author: "Max Murphy"
-description: "Forecasting Violent Conflict"
+description: "Gov 50 Final Project"
 output:
   distill::distill_article:
     self_contained: false
 ---
 
+```{r include = FALSE}
+knitr::opts_chunk$set(echo=FALSE)
+```
 
+## Introduction
 
-## Proposal
+Should we expect the effects of climate change to increase the severity of violent conflicts? There is a growing concern that as weather patterns become more extreme, there will be a concomitant increase in violent conflict, namely civil war. However, what remains unclear is whether there have already been violent conflicts that have been fueled by climate change. As such, in this paper I will interrogate the relationship between changes in temperature and precipitation and violent conflict in Sudan between 1997 and 2021. The reason for the focus on temperature and precipitation change is because these are both likely to become more inconstant due to climate change, and the rationale behind analyzing these effects in Sudan is because the civil war in Sudan has been dubbed “the first climate change conflict” (World Food Program USA, 2017). 
 
-Should we expect the effects of climate change to increase the frequency of violent conflicts? There is a growing concern that as weather patterns become more extreme and unpredictable, there will be a concomitant increase in violent conflict, namely civil war. However, what remains unclear is whether there have already been violent conflicts that have been fueled by climate change. As such, in this paper I will interrogate the relationship between changes in temperature and precipitation and violent conflict in Sudan between 1997 and 2021. The reason for the focus on temperature and precipitation change is because these are both likely to become more inconstant due to climate change, and the rationale behind analyzing these effects in Sudan is because the civil war in Sudan has been dubbed “the first climate change conflict” (World Food Program USA, 2017). My hypothesis is that an increase in temperature and a decrease in precipitation will be correlated with higher rates of violent conflict in Sudan. Given that much of Sudan’s population is dependent upon rain-fed farming, it follows that in drier and warmer periods might lead to economic stress - and economic welfare is one of the most strongly correlated factors with violent conflict. The two explanatory variables - which are observed annual mean temperature per year and observed annual precipitation per year, respectively - are both taken from the Climatic Research Unit (CRU) of University of East Anglia. Meanwhile, using data from ACLED, the outcome variable is the number of fatalities from battles, protests, riots, violence against civilians, and explosions/remove violence each year. If the number of fatalities is higher in the years that have higher average temperatures and lower average precipitation levels, this would lend support to my hypothesis. Conversely, if fatality levels are not correlated with a change in temperature or precipitation, then this would provide evidence against my hypothesis.
+My hypothesis is that an increase in average annual temperature and a decrease in average annual precipitation will be correlated with a higher number of fatalities from violent conflict in Sudan. Given that much of the Sudanese population is dependent upon agriculture, and in warmer and drier periods crop yields often fall, it follows that changes in these two factors can lead to economic stress – and it is well-established in the literature that economic welfare is one of the most strongly correlated factors with violent conflict. The two explanatory variables - which are average observed temperature (in Celsius) and average observed precipitation (in mm), at the monthly and annual levels - are both taken from the Climatic Research Unit (CRU) of University of East Anglia. Meanwhile, using data from ACLED, the outcome variable is the number of fatalities from battles, protests, riots, violence against civilians, and explosions/remove violence each year. If the number of fatalities is higher in the years that have higher average temperatures and lower average precipitation levels, this would lend support to my hypothesis. If it could also be shown that these effects are not merely a result of monthly changes – i.e. it is not simply that more violence occurs in hotter and drier parts of the year – then further credence would be given to my hypothesis. Conversely, if fatality levels are not correlated with a change in temperature or precipitation, then this would provide evidence against my hypothesis. In order to test my hypothesis, this paper will advance in three main parts. First, there will be a data section in which the data sources are unpacked in greater depth and the trends of the key variables are visualized. Second, the main results of the paper are laid out. And in the third section I will give my concluding remarks. Here, I will discuss whether the results from my analysis support my hypothesis, the limitations of my analysis, and any areas for improvement. 
 
 ```{r, echo=FALSE}
 # Load in the data and libraries
@@ -27,9 +31,11 @@ avg_annual_precip <- read_csv("data/observed-annual-precipitation,-1901-2021_br_
 
 # For limitations, you could say I wish I had monthly precipitation.
 # Can I establish causalitY? if not, how could i through a different study?
-
-
 ```
+
+# Data
+
+In this cross-sectional study, the dependent variable is the number of fatalities in Sudan from battles, protests, riots, violence against civilians, and explosions/remove violence. This data is taken from ACLED – an organization which collected real-time data on all reported political violence and protests events around the world. Most of ACLED’s data is collected from secondary sources (e.g. reports, newspapers). It is coded by experienced researchers, and then reviewed by several other experts. The two explanatory variables which are used in this analysis are observed mean temperature (degrees Celsius) and observed mean precipitation levels (mm). The data comes in monthly and annual intervals and is taken from the University of East Anglia’s CRU – one of the world’s most respected institutions that focuses on the study of climate change, where a team of researchers put together thorough datasets through expert coding. The ACLED database goes back to 1997, so this study focuses on the period between this year and 2021 (which is when the CRU last updated its database).
 
 ```{r}
 # Create new column with  the count of fatalities per year
@@ -39,6 +45,10 @@ ACLED <- ACLED |>
 
 # Change name from Category to year
 avg_annual_temp <- avg_annual_temp |>
+  rename("year" = "Category")
+
+# Do the same for avg_annual_precip
+avg_annual_precip <- avg_annual_precip |>
   rename("year" = "Category")
 
 # Filter temp data past 1997
@@ -55,7 +65,7 @@ fatalities_bar <- ACLED |>
   labs(
     x = "Year",
     y = "Number of fatalities",
-    title = "Number of fatalities per year"
+    title = "Fig. 1: Number of fatalities per year"
   )
 
 # Scatter graph of temperature per year 
@@ -65,13 +75,38 @@ temp_scatter <- avg_annual_temp |>
   labs(
     x = "Year",
     y = "Average Annual Temperature (°C)",
-    title = "Average Temperature Over Time"
+    title = "Fig. 2: Average Temperature Over Time"
+  ) +
+  geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5) 
+
+# Scatter graph of precipitation per year
+precip_scatter <- avg_annual_precip |>
+  ggplot(mapping = aes(x = year, y = Precipitation)) +
+         geom_point(color = "steelblue1") + 
+  labs(
+    x = "Year",
+    y = "Average Annual Precipitation (mm)",
+    title = "Fig. 3: Average Precipitation Over Time"
   )
+```
 
+Since 1997, the number of fatalities from political violence in Sudan has fluctuated each year (Fig. 1). The notable spikes in violence were between 2003-05 and 2011-17. Over the course of this same period, the average annual temperature has steadily and clearly increased (Fig. 2), whereas there is no clear trend for the average annual precipitation level over time (Fig. 3).
+
+```{r}
 fatalities_bar
+```
 
+```{r}
 temp_scatter
 ```
+
+```{r}
+precip_scatter
+```
+
+# Results
+
+The relationship between average annual temperature and the annual number of fatalities is as expected: as the former increases, so does the latter (Fig. 4). For every 1-unit increase in X (1 degrees C in average annual temperature), there is an average increase in 677 annual fatalities (Table 1). A regression was also run to test whether the more significant effect of temperature on annual fatalities is lagged (i.e. it is the temperature of the previous year that is more closely associated with a higher number of annual fatalities) (Table 2). However, this is no noteworthy difference. 
 
 ```{r, echo=FALSE}
 # 1a Create a scatter graph that compares the average annual temp vs annual no. of fatalities 
@@ -83,7 +118,7 @@ temp_fat_scatter <- ggplot(temp_fatalities,
   labs(
     x = "Average Annual Temperature (°C)",
     y = "Number of annual fatalities",
-    title = "Average Annual Temp & Annual Fatalities") +
+    title = "Fig. 4: Average Annual Temp & Annual Fatalities") +
   geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5) + 
   geom_text(size = 1.5, hjust = 0, nudge_x = 0.03)
 
@@ -97,12 +132,8 @@ library(stargazer)
 
 fit_1 <- lm(n ~ `Annual Mean`, data = temp_fatalities)
 
-stargazer(fit_1, type = "text")
+stargazer(fit_1, type = "text", title = "Table 1: Average Annual Temperature & Number of Annual Fatalities")
 ```
-
-A 1-unit increase in X (1 degrees C) is associated with an average increase in 676.9 annual fatalities.
-
-(Note: intercept doesn't really mean much as the avg temp is so high, never 0)
 
 ```{r}
 # 1c Compare the average annual temp vs annual no. of fatalities LAGGED 1yr version
@@ -120,17 +151,13 @@ temp_fatalities_lag$year <- shift(temp_fatalities_lag$year, 1)
 
 fit_1.5 <- lm(n ~ `Annual Mean`, data = temp_fatalities)
 
-stargazer(fit_1.5, type = "text")
+stargazer(fit_1.5, type = "text", title = "Table 2: Average Annual Temperature & Number of Annual Fatalities, Lagged Version")
 ```
-The output of the regression does not seem to change significantly when looking at the relationship between annual fatalities one year after the average annual temperature. 
 
+The relationship between average annual precipitation and the number of annual fatalities also adheres to the hypothesis (Fig. 5). A 1-unit increase in X (1mm of average annual precipitation) is associated with an average decrease in 21.13 annual fatalities (Table 3). In other words: the drier the year, the higher then number of fatalities. Much like with temperature, the one-year lagged version of this relationship is virtually identical (Table 4).
 
 ```{r, echo=FALSE}
 # 2a Create a scatter graph that compares the average annual precip vs annual no. of fatalities 
-
-# Change name from Category to year
-avg_annual_precip <- avg_annual_precip |>
-  rename("year" = "Category")
 
 # Merge the datasets
 precip_fatalities <- unique(merge(ACLED[ , c("year", "n")], avg_annual_precip, by = "year", all.x=TRUE))
@@ -144,7 +171,7 @@ precip_fat_scatter <- ggplot(precip_fatalities,
   labs(
     x = "Average Precipitation (mm)",
     y = "Number of annual fatalities",
-    title = "Average Annual Precip & Annual Fatalities") +
+    title = "Fig. 5: Average Annual Precip & Annual Fatalities") +
   geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5) +
   geom_text(size = 1.5, hjust = 0, nudge_x = 2)
 
@@ -156,10 +183,8 @@ precip_fat_scatter
 
 fit_2 <- lm(n ~ Precipitation, data = precip_fatalities)
 
-stargazer(fit_2, type = "text")
+stargazer(fit_2, type = "text", title = "Table 3: Average Annual Precipitation & Number of Annual Fatalities")
 ```
-
-A 1-unit increase in X (1mm of average annual precipitation) is associated with an average decrease in 21.13 annual fatalities. 
 
 ```{r}
 # 2c Compare the average annual precip vs annual no. of fatalities LAGGED 1yr version
@@ -172,11 +197,12 @@ precip_fatalities_lag$year <- shift(precip_fatalities_lag$year, 1)
 
 fit_2.5 <- lm(n ~ Precipitation, data = precip_fatalities)
 
-stargazer(fit_2.5, type = "text")
+stargazer(fit_2.5, type = "text", "Table 4: Average Annual Precipitation & Number of Annual Fatalities, Lagged Version")
 ```
 
-```{r}
+When a multiple regression is run that analyzes both temperature and precipitation, the following is found: a 1 degrees C increase in average annual temperature is associated with an average increase in 232 annual fatalities, when annual precipitation levels are held constant; and an increase in 1mm of average annual precipitation corresponds to an average decrease in 21 annual fatalities (Table 5).
 
+```{r}
 # MULTIPLE REGRESSION: annual temperature and precipitation vs fatatalities
 
 # First merge precip_fatalities and temp_fatalities to create new df
@@ -185,10 +211,10 @@ precip_temp_fatalities <- inner_join(precip_fatalities, temp_fatalities, by = c(
 # Then do linear regression that considers both variables
 fit_precip_temp <- lm(n ~ `Annual Mean` + Precipitation, data = precip_temp_fatalities)
 
-stargazer(fit_precip_temp, type = "text")
+stargazer(fit_precip_temp, type = "text", "Table 5: Average Annual Temperature and Precipitation & Number of Annual Fatalities")
 ```
 
-
+Whilst it is clear that there is a relationship between temperature and precipitation and the number of fatalities at the annual level, what about at the monthly level? The effect appears to be less strong at this time interval (Fig. 6). A 1 degrees C increase in average monthly temperature is  associated with an average decrease (not increase, contrary to the annual level) in 4 average monthly fatalities (Table 6). 
 
 ```{r}
 # 3a The average monthly temp vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in hotter months)
@@ -222,7 +248,7 @@ avg_monthly_temp_fatalities_scatter <- ggplot(avg_monthly_temp_precip_fatalities
   labs(
     x = "Average Monthly Temperature",
     y = "Average monthly fatalities",
-    title = "Avg Monthly Temp & Avg Monthly Fatalities") +
+    title = "Fig. 6: Average Monthly Temp & Average Monthly Fatalities") +
   geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5)
 
 avg_monthly_temp_fatalities_scatter
@@ -233,11 +259,10 @@ avg_monthly_temp_fatalities_scatter
 
 fit_3 <- lm(x ~ `Mean-Temperature`, data = avg_monthly_temp_precip_fatalities)
 
-stargazer(fit_3, type = "text")
+stargazer(fit_3, type = "text", title = "Table 6: Average Monthly Temperature & Number of Monthly Fatalities")
 ```
-A 1-unit increase in X (1 degrees C in average monthly temperature) is associated with an average decrease in 3.71 average monthly fatalities.
 
-All of this makes me think that clearly it's not down to seasonality - i.e. it's due to ANNUAL increases in temperature, not changes within the year. 
+The relationship  appears to go in the reverse direction to the one found at the annual level for precipitation too (Fig. 7). An increase in 1mm of average monthly precipitation corresponds to an average increase in 0.43 monthly fatalities (Table 7).
 
 ```{r}
 # 4a The average monthly precip vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in drier months)
@@ -250,7 +275,7 @@ avg_monthly_precip_fatalities_scatter <- ggplot(avg_monthly_temp_precip_fataliti
   labs(
     x = "Average Monthly Precipitation",
     y = "Average monthly fatalities",
-    title = "Avg Monthly Precip & Avg Monthly Fatalities") +
+    title = "Fig. 7: Average Monthly Precip & Average Monthly Fatalities") +
   geom_smooth(method = "lm", se = F, color = "indianred1", size = 1.5)
 
 avg_monthly_precip_fatalities_scatter
@@ -261,6 +286,13 @@ avg_monthly_precip_fatalities_scatter
 
 fit_4 <- lm(x ~ `Precipitation`, data = avg_monthly_temp_precip_fatalities)
 
-stargazer(fit_4, type = "text")
+stargazer(fit_4, type = "text", "Table 7: Average Monthly Precipitation & Number of Monthly Fatalities")
 ```
-A 1-unit increase in X (1mm of average monthly precipitation) is associated with an average increase in 0.43 monthly fatalities. 
+
+Whilst none of these estimated coefficients have statistical significance, the fact that the size of the effects is much greater at the annual level than the monthly level suggests that (in line with my hypothesis) the relationship is not determined by seasonal fluctuations in temperature and precipitation, but by trends at the yearly level. 
+
+It would be premature to conclude from this study that the effects are causal. This is because violent conflict is a highly complex social/political phenomenon, with multiple contributing factors. And so, without controlling for these other variables - such as state fragility and GDP per capita - we cannot isolate temperature and precipitation change as the causal variables. However, the hope is that the results from this study still advance our understanding of violent conflict by demonstrating that temperature and precipitation appeared to play a role in the escalation of the Sudanese conflict over the last 20 years.  
+
+# Conclusion
+
+(My conclusion)
