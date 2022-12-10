@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo=FALSE)
 
 Should we expect the effects of climate change to increase the severity of violent conflicts? There is a growing concern that as weather patterns become more extreme, there will be a concomitant increase in violent conflict, namely civil war. However, what remains unclear is whether there have already been violent conflicts that have been fueled by climate change. As such, in this paper I will interrogate the relationship between changes in temperature and precipitation and violent conflict in Sudan between 1997 and 2021. The reason for the focus on temperature and precipitation change is because these are both likely to become more inconstant due to climate change, and the rationale behind analyzing these effects in Sudan is because the civil war in Sudan has been dubbed “the first climate change conflict” (World Food Program USA, 2017). 
 
-My hypothesis is that an increase in average annual temperature and a decrease in average annual precipitation will be correlated with a higher number of fatalities from violent conflict in Sudan. Given that much of the Sudanese population is dependent upon agriculture, and in warmer and drier periods crop yields often fall, it follows that changes in these two factors can lead to economic stress – and it is well-established in the literature that economic welfare is strongly correlated  with violent conflict (Miguel et al., 2004). The two explanatory variables - which are average observed temperature (in Celsius) and average observed precipitation (in mm), at the monthly and annual levels - are both taken from the Climatic Research Unit (CRU) of University of East Anglia. Meanwhile, using data from ACLED, the outcome variable is the number of fatalities from battles, protests, riots, violence against civilians, and explosions/remove violence. If the number of fatalities is higher in the years that have higher average temperatures and lower average precipitation levels, this would lend support to my hypothesis. Conversely, if fatality levels are not correlated with a change in temperature or precipitation, then this would provide evidence against my hypothesis. In order to test my hypothesis, this paper will advance in three main parts. First, there will be a data section in which the data sources are unpacked in greater depth and the trends of the key variables are visualized. Second, the main results of the paper are laid out. And in the third section I will give my concluding remarks. Here, I will discuss whether the results from my analysis support my hypothesis, the limitations of my analysis, and any areas for improvement. 
+My hypothesis is that an increase in average annual temperature and a decrease in average annual precipitation will be correlated with a higher number of fatalities due to violent conflict in Sudan. Given that much of the Sudanese population is dependent upon agriculture, and in warmer and drier periods crop yields often fall, it follows that changes in these two factors can lead to economic stress – and it is well-established in the literature that economic welfare is strongly correlated  with violent conflict (Miguel et al., 2004). The two explanatory variables - which are average observed temperature and average observed precipitation, at the monthly and annual levels - are both taken from the Climatic Research Unit (CRU) of University of East Anglia. Meanwhile, using data from ACLED, the outcome variable is the number of fatalities from battles, protests, riots, violence against civilians, and explosions/remove violence. If the number of fatalities is higher in the years that have higher average temperatures and lower average precipitation levels, this would lend support to my hypothesis. Conversely, if fatality levels are not correlated with a change in temperature or precipitation, then this would provide evidence against my hypothesis. In order to test my hypothesis, this paper will advance in three main parts. First, there will be a data section in which the data sources are unpacked in greater depth and the trends of the key variables are visualized. Second, the main results of the paper are laid out. And in the third section, I will give my concluding remarks, discussing whether the results from my analysis support my hypothesis, the limitations of my analysis, and any areas for improvement.
 
 ```{r, echo=FALSE}
 # Load in the data and libraries
@@ -36,11 +36,11 @@ ACLED <- ACLED |>
   group_by(year) |>
   mutate(n = sum(fatalities))
 
-# Change name from Category to year
+# Change name from Category to year (note that if code is run twice, comment this out)
 avg_annual_temp <- avg_annual_temp |>
   rename("year" = "Category")
 
-# Do the same for avg_annual_precip
+# Do the same for avg_annual_precip (again: note that if code is run twice, comment this out)
 avg_annual_precip <- avg_annual_precip |>
   rename("year" = "Category")
 
@@ -83,7 +83,7 @@ precip_scatter <- avg_annual_precip |>
   )
 ```
 
-Since 1997, the number of fatalities from political violence in Sudan has fluctuated each year (Fig. 1). The notable spikes in violence were between 2003-05 and 2011-17. Over the course of this same period, the average annual temperature has steadily and clearly increased (Fig. 2), whereas there is no clear trend for the average annual precipitation level over time (Fig. 3).
+Since 1997, the number of fatalities from political violence in Sudan has fluctuated each year (Fig. 1). The notable spikes in violence were between 2003-05 and 2011-17. Over the course of this same period, the average annual temperature has steadily and clearly increased (Fig. 2). Conversely, there is no clear trend for the average annual precipitation level over time (Fig. 3).
 
 ```{r}
 fatalities_bar
@@ -99,7 +99,7 @@ precip_scatter
 
 # Results
 
-The relationship between average annual temperature and the annual number of fatalities is as expected: as the former increases, so does the latter (Fig. 4). For every 1 degrees C increase in average annual temperature, there is an average increase in 677 annual fatalities (Table 1). A regression was also run to test whether the more significant effect of temperature on annual fatalities is lagged (i.e. it is the temperature of the previous year that is more closely associated with a higher number of annual fatalities) (Table 2). However, this does not seem to be the case - the effect is very similar. 
+The relationship between average annual temperature and the annual number of fatalities is as expected: as the former increases, so does the latter (Fig. 4). For every 1 degree C increase in average annual temperature, there is an average increase in 677 annual fatalities (Table 1). A regression was also run to test whether the stronger effect of temperature on annual fatalities is lagged (i.e. it is the temperature of the previous year that is more closely associated with a higher number of annual fatalities) (Table 2). However, this does not seem to be the case - the effect is very similar. Neither of these results were statistically significant, and it is difficult to say whether the coefficient represents a causal effect because there are so many different factors that contribute to the intensity of violent conflict which have not been controlled for in this analysis (this limitation is unpacked in more depth towards the end of this section and in the conclusion). 
 
 ```{r, echo=FALSE}
 # 1a Create a scatter graph that compares the average annual temp vs annual no. of fatalities 
@@ -147,7 +147,7 @@ fit_1.5 <- lm(n ~ `Annual Mean`, data = temp_fatalities)
 stargazer(fit_1.5, type = "text", title = "Table 2: Average Annual Temperature & Number of Annual Fatalities, Lagged Version")
 ```
 
-The relationship between average annual precipitation and the number of annual fatalities also adheres to my hypothesis (Fig. 5). A 1mm increase in average annual precipitation is associated with an average decrease in 21.13 annual fatalities (Table 3). In other words: the drier the year, the higher then number of fatalities. Much like with temperature, the one-year lagged version of this relationship is virtually identical (Table 4).
+The relationship between average annual precipitation and the number of annual fatalities also adheres to my hypothesis (Fig. 5). A 1mm increase in average annual precipitation is associated with an average decrease in 21.13 annual fatalities (Table 3). In other words: the drier the year, the higher the number of fatalities. Much like with temperature, the one-year lagged version of this relationship does not differ in any meaningful way (Table 4) and neither of the coefficients are statistically significant. 
 
 ```{r, echo=FALSE}
 # 2a Create a scatter graph that compares the average annual precip vs annual no. of fatalities 
@@ -190,24 +190,24 @@ precip_fatalities_lag$year <- shift(precip_fatalities_lag$year, 1)
 
 fit_2.5 <- lm(n ~ Precipitation, data = precip_fatalities)
 
-stargazer(fit_2.5, type = "text", "Table 4: Average Annual Precipitation & Number of Annual Fatalities, Lagged Version")
+stargazer(fit_2.5, type = "text", title = "Table 4: Average Annual Precipitation & Number of Annual Fatalities, Lagged Version")
 ```
 
-When a multiple regression is run that analyzes both temperature and precipitation, the following is found: a 1 degrees C increase in average annual temperature is associated with an average increase in 232 annual fatalities when annual precipitation levels are held constant; and an increase in 1mm of average annual precipitation corresponds to an average decrease in 21 annual fatalities when annual temperature is held constant (Table 5).
+When a multiple regression is run that analyzes both temperature and precipitation, the following is found: a 1 degree C increase in average annual temperature is associated with an average increase in 232 annual fatalities when annual precipitation levels are held constant; and an increase in 1mm of average annual precipitation corresponds to an average decrease in 21 annual fatalities when annual temperature is held constant (Table 5). Like with the other results in this analysis, it is important to point out that these coefficients are not statistically significant.
 
 ```{r}
-# MULTIPLE REGRESSION: annual temperature and precipitation vs fatatalities
+# MULTIPLE REGRESSION: annual temperature and precipitation vs fatalities
 
 # First merge precip_fatalities and temp_fatalities to create new df
 precip_temp_fatalities <- inner_join(precip_fatalities, temp_fatalities, by = c("year", "n"))
 
-# Then do linear regression that considers both variables
+# Do linear regression that considers both variables
 fit_precip_temp <- lm(n ~ `Annual Mean` + Precipitation, data = precip_temp_fatalities)
 
-stargazer(fit_precip_temp, type = "text", "Table 5: Average Annual Temperature and Precipitation & Number of Annual Fatalities")
+stargazer(fit_precip_temp, type = "text", title = "Table 5: Average Annual Temperature and Precipitation & Number of Annual Fatalities")
 ```
 
-While it is clear that there is a relationship between temperature and precipitation and the number of fatalities at the annual level, what about at the monthly level? In other words, is there always more violence in hotter and drier parts of the year? The effect appears to be less strong at this time interval (Fig. 6). A 1 degrees C increase in average monthly temperature is  associated with an average decrease (not increase, contrary to the annual level) in 4 average monthly fatalities (Table 6). 
+While it is clear that there is a relationship between temperature and precipitation and the number of fatalities at the annual level, what about at the monthly level? In other words, does there tend to be higher levels of violence during the hotter and drier parts of the year? The effect appears to be less strong at this time interval (Fig. 6). A 1 degree C increase in average monthly temperature is associated with an average decrease (not increase, contrary to the annual level) in 4 average monthly fatalities (Table 6). 
 
 ```{r}
 # 3a The average monthly temp vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in hotter months)
@@ -255,7 +255,7 @@ fit_3 <- lm(x ~ `Mean-Temperature`, data = avg_monthly_temp_precip_fatalities)
 stargazer(fit_3, type = "text", title = "Table 6: Average Monthly Temperature & Number of Monthly Fatalities")
 ```
 
-The relationship  appears to go in the reverse direction to the one found at the annual level for precipitation too (Fig. 7). An increase in 1mm of average monthly precipitation corresponds to an average increase in 0.43 monthly fatalities (Table 7).
+The relationship appears to go in the reverse direction to the one found at the annual level for precipitation too (Fig. 7). An increase in 1mm of average monthly precipitation corresponds to an average increase in 0.43 monthly fatalities (Table 7). And so, the effects of temperature and precipitation change at the monthly level are much smaller than on the annual one.  
 
 ```{r}
 # 4a The average monthly precip vs average monthly no. of fatalities (i.e.do fatalities tend to be higher in drier months)
@@ -279,16 +279,14 @@ avg_monthly_precip_fatalities_scatter
 
 fit_4 <- lm(x ~ `Precipitation`, data = avg_monthly_temp_precip_fatalities)
 
-stargazer(fit_4, type = "text", "Table 7: Average Monthly Precipitation & Number of Monthly Fatalities")
+stargazer(fit_4, type = "text", title = "Table 7: Average Monthly Precipitation & Number of Monthly Fatalities")
 ```
 
-While none of these estimated coefficients have statistical significance, there are nonetheless some valuable takeaways. Most importantly, it is clear that changes in temperature and precipitation have been associated with the intensity of violent conflict in Sudan since 1997. This relationship holds at the annual level, but not the monthly one. The impact of temperature change is greater than the effect of precipitation change.  
-
-It would be premature to conclude from this study that any of the coefficients are causal. This is because violent conflict is a highly complex social/political phenomenon, with multiple contributing factors. And so, without controlling for these other variables - such as state fragility and GDP per capita - we cannot isolate temperature and precipitation change as the causal variables. However, the hope is that the results from this study still advance our understanding of violent conflict by demonstrating that temperature and precipitation appeared to play a role in the Sudanese conflict over the last 20 years.  
+In sum, it appears that changes in temperature and precipitation have been associated with the intensity of violent conflict in Sudan since 1997. This relationship holds at the annual level, but not the monthly one. The impact of temperature change is greater than the effect of precipitation change. None of the coefficients were statistically significant. It is important to reiterate that it would be premature to conclude from this study that any of the coefficients are causal. This is because violent conflict is a highly complex social/political phenomenon, with multiple contributing factors. And so, without controlling for these other variables - such as state fragility and GDP per capita - we cannot isolate temperature and precipitation change as the causal variables. However, the hope is that the results from this study still advance our understanding of violent conflict by demonstrating that temperature and precipitation appeared to play a role in the Sudanese conflict over the last 20 years.  
 
 # Conclusion
 
-This analysis has demonstrated that between 1997 and 2021, annual changes in temperature and precipitation in Sudan were associated with the number of fatalities related to political violence. In line with my hypothesis, it seems that the warmer and drier the year, the higher the number of fatalities. Interestingly, the effect of temperature change was greater than for precipitation change. Ostensibly, this is surprising given how critical precipitation is for agriculture. Explaining the reason for this difference is out of the scope of the present study, but perhaps it stems from the high spatial variability of rainfall which make national, annual averages of it less helpful (Fischer & Winterrath, 2021). The other finding of this analysis was that the association between temperature and precipitation with the number of fatalities exists at the annual level, but not the monthly level. This arguably gives credence to the proposed underlying mechanism for the relationship: that it is prolonged periods of high temperature and low precipitation which lead to economic problems, fueling violent conflict. In order to confidently make this case though, further research would have to be done that included various economic data too. Despite supporting my hypothesis, this analysis by no means decisively settles the question of whether violence in Sudan has been driven by climate-related factors. First, and most crucially, no other factors were controlled for (e.g. strength of government, migration patterns), meaning that it is not possible to derive causal claims from these findings. Future research would do well to incorporate other variables that may have also fueled the conflict to rule out potential confounders. Second, the coefficients were large, especially for temperature change, but none of them were statistically significant. Third, this study only analyzed whether temperature and precipitation change affect the intensity of violent conflict – but the more important effect may be on the onset of violence itself. And finally, due to the temporal limitations of ACLED’s dataset, this study was confined to the period after 1997. Since much of the Sudanese conflict happened before 1997, using data from earlier on in the country’s history would have increased the strength of the findings. Ultimately, the Sahel is projected to experience stark temperature increases and extreme precipitation levels (UNHCR, 2021). This makes future research into the relationship between climate factors and violent conflict necessary and urgent.
+This analysis has demonstrated that between 1997 and 2021, annual changes in temperature and precipitation in Sudan were associated with the number of fatalities related to political violence. In line with my hypothesis, it seems that on average the warmer and drier the year, the higher the number of fatalities. Interestingly, the effect of temperature change was greater than for precipitation change. Ostensibly, this is surprising given how critical precipitation is for agriculture. Explaining the reason for this difference is out of the scope of the present study, but perhaps it stems from the high spatial variability of rainfall which make national, annual averages of it less helpful (Fischer & Winterrath, 2021). The other finding of this analysis was that the association between temperature and precipitation with the number of fatalities exists at the annual level, but less so at the monthly level. This arguably gives credence to the proposed underlying mechanism for the relationship: that it is prolonged periods of high temperature and low precipitation which lead to economic problems, fueling violent conflict. In order to confidently make this case though, further research would have to be done that included various economic data too. Despite supporting my hypothesis, this analysis by no means decisively settles the question of whether violence in Sudan has been driven by climate-related factors. First, and most crucially, no other factors were controlled for (e.g. strength of government, migration patterns), meaning that it is not possible to infer causal claims from these findings. Future research would do well to incorporate other variables that may have also fueled the conflict to make the findings more robust. Second, the coefficients were large, especially for temperature change, but none of them were statistically significant. Third, this study only analyzed whether temperature and precipitation change affect the intensity of violent conflict – but the more important effect may be on the onset of violence. And finally, due to the temporal limitations of ACLED’s dataset, this study was confined to the period after 1997. Since much of the Sudanese conflict happened before 1997, using data from earlier on in the country’s history would have increased the strength of the findings. Ultimately, the Sahel is projected to experience stark temperature increases and extreme precipitation levels (UNHCR, 2021). This makes future research into the relationship between climate factors and violent conflict necessary and urgent.
 
 # Bibliography
 
@@ -298,4 +296,4 @@ E Miguel, S Satyanath, E Sergenti, 'Economic shocks and civil conflict: An instr
 
 F Fischer & T Winter, 'Precipitation measurement techniques, typical data sets, and their application in erosion research and extreme value statistics', Earth Surface Responses and Processes (2021).
 
-United Nations Refugee Agency, 'Country Risk Profile: Sahel* - UNHCR', 2021. 
+United Nations Refugee Agency (UNHCR), 'Country Risk Profile: Sahel' (2021). 
